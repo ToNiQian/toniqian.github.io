@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="1.简介 项目是一个简单的权限管理页面,分为3个页面,首页,账户中心,登录页通过vue-router 对于路由做权限控制,首页无需登录,跳转账户中心会自动检索是否登录,登录之后首页的登录按钮变为退出按钮,页面之间的的状态管理全部通过vuex进行管理  项目演示  项目用到的技术栈:  vue vue-router vuex webpack axios eslint less   git地址  基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探索vue-spa全家桶项目,解析配置,目录结构,路由以及状态管理的实现,附源码">
+<meta property="og:url" content="http://toniqian.com/2017/08/16/vue/vue-spa/index.html">
+<meta property="og:site_name" content="toniqian的个人博客">
+<meta property="og:description" content="1.简介 项目是一个简单的权限管理页面,分为3个页面,首页,账户中心,登录页通过vue-router 对于路由做权限控制,首页无需登录,跳转账户中心会自动检索是否登录,登录之后首页的登录按钮变为退出按钮,页面之间的的状态管理全部通过vuex进行管理  项目演示  项目用到的技术栈:  vue vue-router vuex webpack axios eslint less   git地址  基础">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2701853-8db4559c6dec5adb.gif?imageMogr2/auto-orient/strip">
+<meta property="og:updated_time" content="2017-08-16T08:46:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="探索vue-spa全家桶项目,解析配置,目录结构,路由以及状态管理的实现,附源码">
+<meta name="twitter:description" content="1.简介 项目是一个简单的权限管理页面,分为3个页面,首页,账户中心,登录页通过vue-router 对于路由做权限控制,首页无需登录,跳转账户中心会自动检索是否登录,登录之后首页的登录按钮变为退出按钮,页面之间的的状态管理全部通过vuex进行管理  项目演示  项目用到的技术栈:  vue vue-router vuex webpack axios eslint less   git地址  基础">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2701853-8db4559c6dec5adb.gif?imageMogr2/auto-orient/strip">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://toniqian.com/2017/08/16/vue/vue-spa/"/>
+
+
+
+
+
+  <title>探索vue-spa全家桶项目,解析配置,目录结构,路由以及状态管理的实现,附源码 | toniqian的个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">toniqian的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">toniqian的个人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://toniqian.com/2017/08/16/vue/vue-spa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ToNiQian">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="toniqian的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">探索vue-spa全家桶项目,解析配置,目录结构,路由以及状态管理的实现,附源码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-16T16:46:26+08:00">
+                2017-08-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><blockquote>
+<p>项目是一个简单的权限管理页面,分为3个页面,<br>首页,账户中心,登录页<br>通过vue-router 对于路由做权限控制,<br>首页无需登录,跳转账户中心会自动检索是否登录,<br>登录之后首页的登录按钮变为退出按钮,<br>页面之间的的状态管理全部通过vuex进行管理</p>
+</blockquote>
+<p><strong>项目演示</strong></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2701853-8db4559c6dec5adb.gif?imageMogr2/auto-orient/strip" alt=""></p>
+<h5 id="项目用到的技术栈"><a href="#项目用到的技术栈" class="headerlink" title="项目用到的技术栈:"></a>项目用到的技术栈:</h5><blockquote>
+<ul>
+<li>vue</li>
+<li>vue-router</li>
+<li>vuex</li>
+<li>webpack</li>
+<li>axios</li>
+<li>eslint</li>
+<li>less</li>
+</ul>
+<hr>
+<p><a href="https://github.com/ToNiQian/vue-spa-example" target="_blank" rel="external">git地址</a></p>
+</blockquote>
+<p><strong>基础环境</strong></p>
+<blockquote>
+<p>node : v8.2.1<br>npm : 5.3.0</p>
+</blockquote>
+<p><strong>注:如果项目install有问题,可把对应环境配置成上面相关的环境在尝试</strong></p>
+<p><strong>项目运行</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ npm install</div><div class="line">$ npm run dev</div></pre></td></tr></table></figure></p>
+<h3 id="2-目录结构"><a href="#2-目录结构" class="headerlink" title="2.目录结构"></a>2.目录结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">├── README.md                       项目介绍</div><div class="line">├── index.html                      入口页面</div><div class="line">├── build                           构建脚本目录</div><div class="line">│   ├── webpack.base.conf.js            webpack基础配置,开发环境,生产环境都依赖   </div><div class="line">│   ├── webpack.dev.conf.js             webpack开发环境配置</div><div class="line">│   ├── webpack.prod.conf.js            webpack生产环境配置</div><div class="line">│   ├── build.js                        生产环境构建脚本               </div><div class="line">│   ├── dev-server.js                   开发服务器热重载脚本，主要用来实现开发阶段的页面自动刷新</div><div class="line">│   ├── utils.js                        构建相关工具方法</div><div class="line">├── config                          项目配置</div><div class="line">│   ├── dev.env.js                      开发环境变量</div><div class="line">│   ├── index.js                        项目配置文件</div><div class="line">│   ├── prod.env.js                     生产环境变量</div><div class="line">├── src                             源码目录    </div><div class="line">│   ├── main.js                         入口文件</div><div class="line">│   ├── config                          入口相关配置文件</div><div class="line">│   ├── app.vue                         根组件</div><div class="line">│   ├── components                      公共组件目录</div><div class="line">│   │   └── base                          基础组件</div><div class="line">│   │   └── layouts                       布局组件</div><div class="line">│   │       └──header                       头部组件</div><div class="line">│   │           └──index.vue</div><div class="line">│   │           └──index.less            </div><div class="line">│   ├── styles                          样式资源</div><div class="line">│   │   └── index.less                    样式入口</div><div class="line">│   │   └── var.less                      变量</div><div class="line">│   │   └── reset.less                    重置样式  </div><div class="line">│   │   └── common.less                   公共样式  </div><div class="line">│   ├── images                          图片资源</div><div class="line">│   │   └── auth                          验证模块图片</div><div class="line">│   ├── pages                           页面目录</div><div class="line">│   │   └── auth                          验证模块</div><div class="line">│   │       └── login                       登录文件</div><div class="line">│   │           └── index.vue                 登录页</div><div class="line">│   │           └── index.less                登录页样式</div><div class="line">│   ├── routes                          路由目录</div><div class="line">│   │   └── auth                          验证模块</div><div class="line">│   │       └── index.js                    验证模块入口</div><div class="line">│   │   └── index                         所有模块汇总</div><div class="line">│   ├── store                           应用级数据（state）</div><div class="line">│   │   └── index.js                      所有模块数据汇总</div><div class="line">│   │   └── auth                          验证相关数据模块</div><div class="line">│   │       └── index.js                    验证模块入口</div><div class="line">│   │       └── mutation-types.js           类型</div><div class="line">│   │       └── actions.js                  actions</div><div class="line">│   │       └── mutations.js                mutations</div><div class="line">│   │       └── getters.js                  getters</div><div class="line">│   │       └── state.js                    默认状态</div><div class="line">│   ├── services                        接口api定义</div><div class="line">├── .eslintrc.js                        eslint规则配置</div><div class="line">├── package.json</div></pre></td></tr></table></figure>
+<p><strong>大概解释一下目录结构</strong></p>
+<blockquote>
+<p>项目是以<strong>模块化</strong>去划分页面,<br>建议在拿到需求的时候,根据<strong>模块</strong>划分好页面,<br>定义好模块名称,建议<strong>pages</strong>,<strong>images</strong>,<strong>routes</strong>目录,模块名保持一致,<br><strong>pages</strong>目录里面是模块文件,模块文件里面是页面文件,<br>页面文件包含实现还有样式文件<br><strong>styles</strong>目录里面放一些公共样式,最后通过index.less导出,在入口文件引入<br><strong>components</strong>目录里面放几个模块,可以大致分为<strong>base基础组件</strong>,<br><strong>layouts布局组件</strong>,<strong>bussiness业务组件</strong>,然后在对应模块下面写上对应的组件实现</p>
+<hr>
+<h3 id="3-配置文件"><a href="#3-配置文件" class="headerlink" title="3.配置文件"></a>3.配置文件</h3><p><strong>package.json里面的配置</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&quot;dev&quot;: &quot;node build/dev-server.js&quot;,</div><div class="line">&quot;build&quot;: &quot;node build/build.js&quot;,</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="3-1开发环境启动-dev-server-js"><a href="#3-1开发环境启动-dev-server-js" class="headerlink" title="3.1开发环境启动 dev-server.js"></a>3.1<strong>开发环境启动 dev-server.js</strong></h4><p><strong>dev-server.js的实现</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div></pre></td><td class="code"><pre><div class="line">require(&apos;./check-versions&apos;)()</div><div class="line"></div><div class="line">var config = require(&apos;../config&apos;)</div><div class="line">if (!process.env.NODE_ENV) &#123;</div><div class="line">  process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)</div><div class="line">&#125;</div><div class="line"></div><div class="line">var opn = require(&apos;opn&apos;)</div><div class="line">var path = require(&apos;path&apos;)</div><div class="line">var express = require(&apos;express&apos;)</div><div class="line">var webpack = require(&apos;webpack&apos;)</div><div class="line">var proxyMiddleware = require(&apos;http-proxy-middleware&apos;)</div><div class="line">var webpackConfig = require(&apos;./webpack.dev.conf&apos;)</div><div class="line"></div><div class="line">// default port where dev server listens for incoming traffic</div><div class="line">var port = process.env.PORT || config.dev.port</div><div class="line">// automatically open browser, if not set will be false</div><div class="line">var autoOpenBrowser = !!config.dev.autoOpenBrowser</div><div class="line">// Define HTTP proxies to your custom API backend</div><div class="line">// https://github.com/chimurai/http-proxy-middleware</div><div class="line">var proxyTable = config.dev.proxyTable</div><div class="line"></div><div class="line">var app = express()</div><div class="line">var compiler = webpack(webpackConfig)</div><div class="line"></div><div class="line">var devMiddleware = require(&apos;webpack-dev-middleware&apos;)(compiler, &#123;</div><div class="line">  publicPath: webpackConfig.output.publicPath,</div><div class="line">  quiet: true</div><div class="line">&#125;)</div><div class="line"></div><div class="line">var hotMiddleware = require(&apos;webpack-hot-middleware&apos;)(compiler, &#123;</div><div class="line">  log: () =&gt; &#123;</div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line">// force page reload when html-webpack-plugin template changes</div><div class="line">compiler.plugin(&apos;compilation&apos;, function (compilation) &#123;</div><div class="line">  compilation.plugin(&apos;html-webpack-plugin-after-emit&apos;, function (data, cb) &#123;</div><div class="line">    hotMiddleware.publish(&#123; action: &apos;reload&apos; &#125;)</div><div class="line">    cb()</div><div class="line">  &#125;)</div><div class="line">&#125;)</div><div class="line"></div><div class="line">// proxy api requests</div><div class="line">Object.keys(proxyTable).forEach(function (context) &#123;</div><div class="line">  var options = proxyTable[context]</div><div class="line">  if (typeof options === &apos;string&apos;) &#123;</div><div class="line">    options = &#123; target: options &#125;</div><div class="line">  &#125;</div><div class="line">  app.use(proxyMiddleware(options.filter || context, options))</div><div class="line">&#125;)</div><div class="line"></div><div class="line">// handle fallback for HTML5 history API</div><div class="line">app.use(require(&apos;connect-history-api-fallback&apos;)())</div><div class="line"></div><div class="line">// serve webpack bundle output</div><div class="line">app.use(devMiddleware)</div><div class="line"></div><div class="line">// enable hot-reload and state-preserving</div><div class="line">// compilation error display</div><div class="line">app.use(hotMiddleware)</div><div class="line"></div><div class="line">// serve pure static assets</div><div class="line">var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)</div><div class="line">app.use(staticPath, express.static(&apos;./static&apos;))</div><div class="line"></div><div class="line">var uri = &apos;http://localhost:&apos; + port</div><div class="line"></div><div class="line">var _resolve</div><div class="line">var readyPromise = new Promise(resolve =&gt; &#123;</div><div class="line">  _resolve = resolve</div><div class="line">&#125;)</div><div class="line"></div><div class="line">console.log(&apos;&gt; Starting dev server...&apos;)</div><div class="line">devMiddleware.waitUntilValid(() =&gt; &#123;</div><div class="line">  console.log(&apos;&gt; Listening at &apos; + uri + &apos;\n&apos;)</div><div class="line">  // when env is testing, don&apos;t need open it</div><div class="line">  if (autoOpenBrowser &amp;&amp; process.env.NODE_ENV !== &apos;testing&apos;) &#123;</div><div class="line">    opn(uri)</div><div class="line">  &#125;</div><div class="line">  _resolve()</div><div class="line">&#125;)</div><div class="line"></div><div class="line">var server = app.listen(port)</div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">  ready: readyPromise,</div><div class="line">  close: () =&gt; &#123;</div><div class="line">    server.close()</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p><strong>dev-server.js</strong>依赖了<strong>webpack.dev.conf.js</strong>配置文件<br>配置文件分为<strong>webpack.base.conf.js</strong>基础配置<br>还有<strong>webpack.dev.conf.js</strong>开发环境的配置<br>还有<strong>webpack.prod.conf.js</strong>生产环境的配置</p>
+</blockquote>
+<p><strong>贴一段base的基础配置</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">var path = require(&apos;path&apos;)</div><div class="line">var utils = require(&apos;./utils&apos;)</div><div class="line">var config = require(&apos;../config&apos;)</div><div class="line">var vueLoaderConfig = require(&apos;./vue-loader.conf&apos;)</div><div class="line"></div><div class="line">function resolve(dir) &#123;</div><div class="line">  return path.join(__dirname, &apos;..&apos;, dir)</div><div class="line">&#125;</div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">  entry: &#123;</div><div class="line">    app: [&apos;babel-polyfill&apos;, &apos;./src/main.js&apos;]</div><div class="line">  &#125;,</div><div class="line">  output: &#123;</div><div class="line">    path: config.build.assetsRoot,</div><div class="line">    filename: &apos;[name].js&apos;,</div><div class="line">    publicPath: process.env.NODE_ENV === &apos;production&apos;</div><div class="line">      ? config.build.assetsPublicPath</div><div class="line">      : config.dev.assetsPublicPath</div><div class="line">  &#125;,</div><div class="line">  resolve: &#123;</div><div class="line">    extensions: [&apos;.js&apos;, &apos;.vue&apos;, &apos;.json&apos;],</div><div class="line">    alias: &#123;</div><div class="line">      &apos;@&apos;: resolve(&apos;src&apos;),</div><div class="line">      &apos;~component&apos;: resolve(&apos;src/components&apos;),</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  module: &#123;</div><div class="line">    rules: [</div><div class="line">      // eslint检查配置 不需要可以注释</div><div class="line">      &#123;</div><div class="line">        test: /\.(js|vue)$/,</div><div class="line">        loader: &apos;eslint-loader&apos;,</div><div class="line">        enforce: &apos;pre&apos;,</div><div class="line">        include: [resolve(&apos;src&apos;), resolve(&apos;test&apos;)],</div><div class="line">        options: &#123;</div><div class="line">          formatter: require(&apos;eslint-friendly-formatter&apos;)</div><div class="line">        &#125;</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        test: /\.vue$/,</div><div class="line">        loader: &apos;vue-loader&apos;,</div><div class="line">        options: vueLoaderConfig</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        test: /\.js$/,</div><div class="line">        loader: &apos;babel-loader&apos;,</div><div class="line">        include: [resolve(&apos;src&apos;), resolve(&apos;test&apos;)]</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,</div><div class="line">        loader: &apos;url-loader&apos;,</div><div class="line">        options: &#123;</div><div class="line">          limit: 10000,</div><div class="line">          name: utils.assetsPath(&apos;img/[name].[hash:7].[ext]&apos;)</div><div class="line">        &#125;</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,</div><div class="line">        loader: &apos;url-loader&apos;,</div><div class="line">        options: &#123;</div><div class="line">          limit: 10000,</div><div class="line">          name: utils.assetsPath(&apos;fonts/[name].[hash:7].[ext]&apos;)</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;,</div><div class="line">  plugins: [</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>上面的配置依赖于config目录的一些配置,<br>config目录分为prod.evn.js生产环境的变量,dev.env.js 开发环境的变量,<br>比如<strong>api接口</strong>的地址就可以在这边配置,根据开发环境还有生产环境分别配置不同的接口地址</p>
+</blockquote>
+<p><strong>config入口文件的实现</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">// see http://vuejs-templates.github.io/webpack for documentation.</div><div class="line">var path = require(&apos;path&apos;)</div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">  build: &#123;</div><div class="line">    env: require(&apos;./prod.env&apos;),</div><div class="line">    index: path.resolve(__dirname, &apos;../dist/index.html&apos;),</div><div class="line">    assetsRoot: path.resolve(__dirname, &apos;../dist&apos;),</div><div class="line">    assetsSubDirectory: &apos;static&apos;,</div><div class="line">    assetsPublicPath: &apos;./&apos;,</div><div class="line">    productionSourceMap: true,</div><div class="line">    // Gzip off by default as many popular static hosts such as</div><div class="line">    // Surge or Netlify already gzip all static assets for you.</div><div class="line">    // Before setting to `true`, make sure to:</div><div class="line">    // npm install --save-dev compression-webpack-plugin</div><div class="line">    productionGzip: false,</div><div class="line">    productionGzipExtensions: [&apos;js&apos;, &apos;css&apos;],</div><div class="line">    // Run the build command with an extra argument to</div><div class="line">    // View the bundle analyzer report after build finishes:</div><div class="line">    // `npm run build --report`</div><div class="line">    // Set to `true` or `false` to always turn it on or off</div><div class="line">    bundleAnalyzerReport: process.env.npm_config_report</div><div class="line">  &#125;,</div><div class="line">  dev: &#123;</div><div class="line">    env: require(&apos;./dev.env&apos;),</div><div class="line">    port: 8080,</div><div class="line">    autoOpenBrowser: true,</div><div class="line">    assetsSubDirectory: &apos;static&apos;,</div><div class="line">    assetsPublicPath: &apos;/&apos;,</div><div class="line">    proxyTable: &#123;&#125;,</div><div class="line">    // CSS Sourcemaps off by default because relative paths are &quot;buggy&quot;</div><div class="line">    // with this option, according to the CSS-Loader README</div><div class="line">    // (https://github.com/webpack/css-loader#sourcemaps)</div><div class="line">    // In our experience, they generally work as expected,</div><div class="line">    // just be aware of this issue when enabling this option.</div><div class="line">    cssSourceMap: false</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>入口文件根据环境的不同,分别做了一些不同的配置</p>
+<hr>
+<p><strong>贴一段dev的配置</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">var utils = require(&apos;./utils&apos;)</div><div class="line">var webpack = require(&apos;webpack&apos;)</div><div class="line">var config = require(&apos;../config&apos;)</div><div class="line">var merge = require(&apos;webpack-merge&apos;)</div><div class="line">var baseWebpackConfig = require(&apos;./webpack.base.conf&apos;)</div><div class="line">var HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;)</div><div class="line">var FriendlyErrorsPlugin = require(&apos;friendly-errors-webpack-plugin&apos;)</div><div class="line">// add hot-reload related code to entry chunks</div><div class="line">Object.keys(baseWebpackConfig.entry).forEach(function (name) &#123;</div><div class="line">  baseWebpackConfig.entry[name] = [&apos;./build/dev-client&apos;].concat(baseWebpackConfig.entry[name])</div><div class="line">&#125;)</div><div class="line"></div><div class="line">module.exports = merge(baseWebpackConfig, &#123;</div><div class="line">  module: &#123;</div><div class="line">    rules: utils.styleLoaders(&#123; sourceMap: config.dev.cssSourceMap &#125;)</div><div class="line">  &#125;,</div><div class="line">  // cheap-module-eval-source-map is faster for development</div><div class="line">  devtool: &apos;#cheap-module-eval-source-map&apos;,</div><div class="line">  plugins: [</div><div class="line">    new webpack.DefinePlugin(&#123;</div><div class="line">      &apos;process.env&apos;: config.dev.env</div><div class="line">    &#125;),</div><div class="line">    // https://github.com/glenjamin/webpack-hot-middleware#installation--usage</div><div class="line">    new webpack.HotModuleReplacementPlugin(),</div><div class="line">    new webpack.NoEmitOnErrorsPlugin(),</div><div class="line">    // https://github.com/ampedandwired/html-webpack-plugin</div><div class="line">    new HtmlWebpackPlugin(&#123;</div><div class="line">      filename: &apos;index.html&apos;,</div><div class="line">      template: &apos;index.html&apos;,</div><div class="line">      inject: true</div><div class="line">    &#125;),</div><div class="line">    new FriendlyErrorsPlugin()</div><div class="line">  ]</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="3-2生产环境启动-build-js"><a href="#3-2生产环境启动-build-js" class="headerlink" title="3.2生产环境启动 build.js"></a>3.2生产环境启动 build.js</h4><p><strong>build.js的实现</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">require(&apos;./check-versions&apos;)()</div><div class="line"></div><div class="line">process.env.NODE_ENV = &apos;production&apos;</div><div class="line"></div><div class="line">var ora = require(&apos;ora&apos;)</div><div class="line">var rm = require(&apos;rimraf&apos;)</div><div class="line">var path = require(&apos;path&apos;)</div><div class="line">var chalk = require(&apos;chalk&apos;)</div><div class="line">var webpack = require(&apos;webpack&apos;)</div><div class="line">var config = require(&apos;../config&apos;)</div><div class="line">var webpackConfig = require(&apos;./webpack.prod.conf&apos;)</div><div class="line"></div><div class="line">var spinner = ora(&apos;building for production...&apos;)</div><div class="line">spinner.start()</div><div class="line"></div><div class="line">rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err =&gt; &#123;</div><div class="line">  if (err) throw err</div><div class="line">  webpack(webpackConfig, function (err, stats) &#123;</div><div class="line">    spinner.stop()</div><div class="line">    if (err) throw err</div><div class="line">    process.stdout.write(stats.toString(&#123;</div><div class="line">        colors: true,</div><div class="line">        modules: false,</div><div class="line">        children: false,</div><div class="line">        chunks: false,</div><div class="line">        chunkModules: false</div><div class="line">      &#125;) + &apos;\n\n&apos;)</div><div class="line"></div><div class="line">    console.log(chalk.cyan(&apos;  Build complete.\n&apos;))</div><div class="line">    console.log(chalk.yellow(</div><div class="line">      &apos;  Tip: built files are meant to be served over an HTTP server.\n&apos; +</div><div class="line">      &apos;  Opening index.html over file:// won\&apos;t work.\n&apos;</div><div class="line">    ))</div><div class="line">  &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p><strong>build引入了webpack.prod.conf,下面贴一段实现prod的实现</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div></pre></td><td class="code"><pre><div class="line">var path = require(&apos;path&apos;)</div><div class="line">var utils = require(&apos;./utils&apos;)</div><div class="line">var webpack = require(&apos;webpack&apos;)</div><div class="line">var config = require(&apos;../config&apos;)</div><div class="line">var merge = require(&apos;webpack-merge&apos;)</div><div class="line">var baseWebpackConfig = require(&apos;./webpack.base.conf&apos;)</div><div class="line">var CopyWebpackPlugin = require(&apos;copy-webpack-plugin&apos;)</div><div class="line">var HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;)</div><div class="line">var ExtractTextPlugin = require(&apos;extract-text-webpack-plugin&apos;)</div><div class="line">var OptimizeCSSPlugin = require(&apos;optimize-css-assets-webpack-plugin&apos;)</div><div class="line"></div><div class="line">var env = config.build.env</div><div class="line"></div><div class="line">var webpackConfig = merge(baseWebpackConfig, &#123;</div><div class="line">  module: &#123;</div><div class="line">    rules: utils.styleLoaders(&#123;</div><div class="line">      sourceMap: config.build.productionSourceMap,</div><div class="line">      extract: true</div><div class="line">    &#125;)</div><div class="line">  &#125;,</div><div class="line">  devtool: config.build.productionSourceMap ? &apos;#source-map&apos; : false,</div><div class="line">  output: &#123;</div><div class="line">    path: config.build.assetsRoot,</div><div class="line">    filename: utils.assetsPath(&apos;js/[name].[chunkhash].js&apos;),</div><div class="line">    chunkFilename: utils.assetsPath(&apos;js/[id].[chunkhash].js&apos;)</div><div class="line">  &#125;,</div><div class="line">  plugins: [</div><div class="line">    // http://vuejs.github.io/vue-loader/en/workflow/production.html</div><div class="line">    new webpack.DefinePlugin(&#123;</div><div class="line">      &apos;process.env&apos;: env</div><div class="line">    &#125;),</div><div class="line">    new webpack.optimize.UglifyJsPlugin(&#123;</div><div class="line">      compress: &#123;</div><div class="line">        warnings: false</div><div class="line">      &#125;,</div><div class="line">      sourceMap: true</div><div class="line">    &#125;),</div><div class="line">    // extract css into its own file</div><div class="line">    new ExtractTextPlugin(&#123;</div><div class="line">      filename: utils.assetsPath(&apos;css/[name].[contenthash].css&apos;)</div><div class="line">    &#125;),</div><div class="line">    // Compress extracted CSS. We are using this plugin so that possible</div><div class="line">    // duplicated CSS from different components can be deduped.</div><div class="line">    new OptimizeCSSPlugin(&#123;</div><div class="line">      cssProcessorOptions: &#123;</div><div class="line">        safe: true</div><div class="line">      &#125;</div><div class="line">    &#125;),</div><div class="line">    // generate dist index.html with correct asset hash for caching.</div><div class="line">    // you can customize output by editing /index.html</div><div class="line">    // see https://github.com/ampedandwired/html-webpack-plugin</div><div class="line">    new HtmlWebpackPlugin(&#123;</div><div class="line">      filename: config.build.index,</div><div class="line">      template: &apos;index.html&apos;,</div><div class="line">      inject: true,</div><div class="line">      minify: &#123;</div><div class="line">        removeComments: true,</div><div class="line">        collapseWhitespace: true,</div><div class="line">        removeAttributeQuotes: true</div><div class="line">        // more options:</div><div class="line">        // https://github.com/kangax/html-minifier#options-quick-reference</div><div class="line">      &#125;,</div><div class="line">      // necessary to consistently work with multiple chunks via CommonsChunkPlugin</div><div class="line">      chunksSortMode: &apos;dependency&apos;</div><div class="line">    &#125;),</div><div class="line">    // split vendor js into its own file</div><div class="line">    new webpack.optimize.CommonsChunkPlugin(&#123;</div><div class="line">      name: &apos;vendor&apos;,</div><div class="line">      minChunks: function (module, count) &#123;</div><div class="line">        // any required modules inside node_modules are extracted to vendor</div><div class="line">        return (</div><div class="line">          module.resource &amp;&amp;</div><div class="line">          /\.js$/.test(module.resource) &amp;&amp;</div><div class="line">          module.resource.indexOf(</div><div class="line">            path.join(__dirname, &apos;../node_modules&apos;)</div><div class="line">          ) === 0</div><div class="line">        )</div><div class="line">      &#125;</div><div class="line">    &#125;),</div><div class="line">    // extract webpack runtime and module manifest to its own file in order to</div><div class="line">    // prevent vendor hash from being updated whenever app bundle is updated</div><div class="line">    new webpack.optimize.CommonsChunkPlugin(&#123;</div><div class="line">      name: &apos;manifest&apos;,</div><div class="line">      chunks: [&apos;vendor&apos;]</div><div class="line">    &#125;),</div><div class="line">    // copy custom static assets</div><div class="line">    new CopyWebpackPlugin([</div><div class="line">      &#123;</div><div class="line">        from: path.resolve(__dirname, &apos;../static&apos;),</div><div class="line">        to: config.build.assetsSubDirectory,</div><div class="line">        ignore: [&apos;.*&apos;]</div><div class="line">      &#125;</div><div class="line">    ])</div><div class="line">  ]</div><div class="line">&#125;)</div><div class="line"></div><div class="line">if (config.build.productionGzip) &#123;</div><div class="line">  var CompressionWebpackPlugin = require(&apos;compression-webpack-plugin&apos;)</div><div class="line"></div><div class="line">  webpackConfig.plugins.push(</div><div class="line">    new CompressionWebpackPlugin(&#123;</div><div class="line">      asset: &apos;[path].gz[query]&apos;,</div><div class="line">      algorithm: &apos;gzip&apos;,</div><div class="line">      test: new RegExp(</div><div class="line">        &apos;\\.(&apos; +</div><div class="line">        config.build.productionGzipExtensions.join(&apos;|&apos;) +</div><div class="line">        &apos;)$&apos;</div><div class="line">      ),</div><div class="line">      threshold: 10240,</div><div class="line">      minRatio: 0.8</div><div class="line">    &#125;)</div><div class="line">  )</div><div class="line">&#125;</div><div class="line"></div><div class="line">if (config.build.bundleAnalyzerReport) &#123;</div><div class="line">  var BundleAnalyzerPlugin = require(&apos;webpack-bundle-analyzer&apos;).BundleAnalyzerPlugin</div><div class="line">  webpackConfig.plugins.push(new BundleAnalyzerPlugin())</div><div class="line">&#125;</div><div class="line"></div><div class="line">module.exports = webpackConfig</div></pre></td></tr></table></figure></p>
+<hr>
+<blockquote>
+<p>上面分别是dev环境还有prod环境的配置,<br>他们都是基础base配置,不同点主要在于</p>
+<ul>
+<li>dev环境利用express在本地搭建了环境,启动了热更新服务</li>
+<li>prod环境js,html进行了压缩合并,减少了体积</li>
+<li>prod环境提取了公共js,提取了样式文件</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="4-路由的实现"><a href="#4-路由的实现" class="headerlink" title="4.路由的实现"></a>4.路由的实现</h3><p><strong>使用<a href="https://router.vuejs.org/zh-cn/" target="_blank" rel="external">vue-router</a>进行单页面路由的控制</strong> </p>
+<p><strong>vue-router的相关概念介绍,就不一一介绍的,这边直接讲解vue-router在项目中的实现,具体的vue-router相关知识请参考<a href="https://router.vuejs.org/zh-cn/" target="_blank" rel="external">vue-router官网</a></strong><br><strong>路由的使用在config.js文件中</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">export const router = new VueRouter(&#123;</div><div class="line">  mode: &apos;history&apos;,</div><div class="line">  routes,</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h4 id="mode为history表示使用h5-history模式-这样就不会出现-符号"><a href="#mode为history表示使用h5-history模式-这样就不会出现-符号" class="headerlink" title="mode为history表示使用h5 history模式,这样就不会出现#符号"></a>mode为history表示使用h5 history模式,这样就不会出现#符号</h4><p>不过history模式下面也有一些坑,具体可以参考<br><a href="https://router.vuejs.org/zh-cn/essentials/history-mode.html" target="_blank" rel="external">HTML5 History 模式</a></p>
+<p><strong>路由目录如下:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">│   ├── routes                          路由目录</div><div class="line">│   │   └── auth                          验证模块</div><div class="line">│   │       └── index.js                    验证模块入口</div><div class="line">│   │   └── index                         所有模块汇总</div></pre></td></tr></table></figure></p>
+<p><strong>路由模块按照页面模块同步,如验证模块,保持跟页面模块一致,<br>一个模块下面放一个模块入口,里面的配置如下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">const Login = r =&gt; require.ensure([], () =&gt; r(require(&apos;@/pages/auth/login&apos;)), &apos;auth&apos;);</div><div class="line">const arr = [</div><div class="line">  &#123;</div><div class="line">    path: &apos;/login&apos;,</div><div class="line">    name: &apos;login.index&apos;,</div><div class="line">    component: Login,</div><div class="line"></div><div class="line">    // If the user needs to be a guest to view this page</div><div class="line">    meta: &#123;</div><div class="line">      guest: true,</div><div class="line">    &#125;,</div><div class="line">  &#125;,</div><div class="line">];</div><div class="line">// Auth</div><div class="line">export default arr;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const Login = r =&gt; require.ensure([], () =&gt; r(require(&apos;@/pages/auth/login&apos;)), &apos;auth&apos;);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>这边结合 Vue 的 异步组件和 Webpack 的 <a href="https://doc.webpack-china.org//guides/code-splitting-async/#require-ensure-/" target="_blank" rel="external">code splitting feature</a>, 轻松实现路由组件的懒加载。<br>有时候我们想把某个模块下的所有组件都打包在同个异步 chunk 中。只需要提供 require.ensure第三个参数作为 chunk 的名称即可</p>
+<hr>
+<p> <strong>路由做了权限控制,对于需要登录之后才能打开的页面,<br>我们控制meta.auth 属性为true即可</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">export const router = new VueRouter(&#123;</div><div class="line">  mode: &apos;history&apos;,</div><div class="line">  routes,</div><div class="line">&#125;);</div><div class="line">router.beforeEach((to, from, next) =&gt; &#123;</div><div class="line">  if (to.matched.some(m =&gt; m.meta.auth) &amp;&amp; !store.state.auth.authenticated) &#123;</div><div class="line">    /*</div><div class="line">     * If the user is not authenticated and visits</div><div class="line">     * a page that requires authentication, redirect to the login page</div><div class="line">     */</div><div class="line">    next(&#123;</div><div class="line">      name: &apos;login.index&apos;,</div><div class="line">    &#125;);</div><div class="line">  &#125; else if (to.matched.some(m =&gt; m.meta.guest) &amp;&amp; store.state.auth.authenticated) &#123;</div><div class="line">    /*</div><div class="line">     * If the user is authenticated and visits</div><div class="line">     * an guest page, redirect to the dashboard page</div><div class="line">     */</div><div class="line">    next(&#123;</div><div class="line">      name: &apos;home.index&apos;,</div><div class="line">    &#125;);</div><div class="line">  &#125; else &#123;</div><div class="line">    next();</div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="5-Vuex状态管理"><a href="#5-Vuex状态管理" class="headerlink" title="5.Vuex状态管理"></a>5.Vuex状态管理</h3><h5 id="项目使用vuex进行状态管理-把一些公共行为-api交互相关的状态都封装在vuex中进行统一管理"><a href="#项目使用vuex进行状态管理-把一些公共行为-api交互相关的状态都封装在vuex中进行统一管理" class="headerlink" title="项目使用vuex进行状态管理,把一些公共行为,api交互相关的状态都封装在vuex中进行统一管理"></a>项目使用<a href="https://vuex.vuejs.org/zh-cn/intro.html" target="_blank" rel="external">vuex</a>进行状态管理,把一些公共行为,api交互相关的状态都封装在vuex中进行统一管理</h5><p><strong>vuex的相关概念介绍,就不一一介绍的,这边直接讲解vuex在项目中的实现,具体的vuex相关知识请参考<a href="https://vuex.vuejs.org/zh-cn/state.html" target="_blank" rel="external">vuex官网</a></strong></p>
+<p><strong>vuex目录实现:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">│   ├── store                           应用级数据（state）</div><div class="line">│   │   └── index.js                      所有模块数据汇总</div><div class="line">│   │   └── auth                          验证相关数据模块</div><div class="line">│   │       └── index.js                    验证模块入口</div><div class="line">│   │       └── mutation-types.js           类型</div><div class="line">│   │       └── actions.js                  actions</div><div class="line">│   │       └── mutations.js                mutations</div><div class="line">│   │       └── getters.js                  getters</div><div class="line">│   │       └── state.js                    默认状态</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>vuex按照<strong>数据模型</strong>进行划分<br>注: 这边的模块名称不必与页面模块相同,按照数据模型划分更为合理</p>
+</blockquote>
+<h4 id="这边简单介绍一下自己对于vuex流程的理解"><a href="#这边简单介绍一下自己对于vuex流程的理解" class="headerlink" title="这边简单介绍一下自己对于vuex流程的理解"></a>这边简单介绍一下自己对于vuex流程的理解</h4><h5 id="1-首先就是我们在页面上必须通过action（行为）去改变数据状态-那么我们就需要定义action"><a href="#1-首先就是我们在页面上必须通过action（行为）去改变数据状态-那么我们就需要定义action" class="headerlink" title="1.首先就是我们在页面上必须通过action（行为）去改变数据状态,那么我们就需要定义action"></a>1.首先就是我们在页面上必须通过action（行为）去改变数据状态,那么我们就需要定义action</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">/* ============</div><div class="line"> * Actions for the auth module</div><div class="line"> * ============</div><div class="line"> *</div><div class="line"> * The actions that are available on the</div><div class="line"> * auth module.</div><div class="line"> */</div><div class="line"></div><div class="line">import * as types from &apos;./mutation-types&apos;;</div><div class="line">import Vue from &apos;vue&apos;;</div><div class="line">import store from &apos;@/store&apos;;</div><div class="line"></div><div class="line">export const check = (</div><div class="line">  &#123; commit &#125;) =&gt; &#123;</div><div class="line">  commit(types.CHECK);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">export const login = (&#123; commit &#125;, payload) =&gt; &#123;</div><div class="line">  /*</div><div class="line">   * Normally you would perform an AJAX-request.</div><div class="line">   * But to get the example working, the data is hardcoded.</div><div class="line">   *</div><div class="line">   * With the include REST-client Axios, you can do something like this:</div><div class="line">   * Vue.$http.post(&apos;/auth/login&apos;, user)</div><div class="line">   *   .then((response) =&gt; &#123;</div><div class="line">   *     success(response);</div><div class="line">   *   &#125;)</div><div class="line">   *   .catch((error) =&gt; &#123;</div><div class="line">   *     failed(error);</div><div class="line">   *   &#125;);</div><div class="line">   */</div><div class="line">  const promise = new Promise((resolve, reject) =&gt; &#123;</div><div class="line">    const success = true;</div><div class="line">    if (success) &#123;</div><div class="line">      commit(types.LOGIN, payload);</div><div class="line">      // 登录成功,触发存入用户信息</div><div class="line">      store.dispatch(&apos;account/setAccount&apos;);</div><div class="line">      Vue.router.push(&apos;/account&apos;);</div><div class="line">      resolve();</div><div class="line">    &#125; else &#123;</div><div class="line">      reject();</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">  return promise;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">export const logout = (&#123; commit &#125;) =&gt; &#123;</div><div class="line">  const promise = new Promise((resolve, reject) =&gt; &#123;</div><div class="line">    const success = true;</div><div class="line">    if (success) &#123;</div><div class="line">      commit(types.LOGOUT);</div><div class="line">      resolve();</div><div class="line">    &#125; else &#123;</div><div class="line">      reject();</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">  return promise;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  check,</div><div class="line">  login,</div><div class="line">  logout,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h5 id="2-更改-Vuex-的-store-中的状态的唯一方法是提交-mutation-变化"><a href="#2-更改-Vuex-的-store-中的状态的唯一方法是提交-mutation-变化" class="headerlink" title="2.更改 Vuex 的 store 中的状态的唯一方法是提交 mutation (变化)"></a>2.更改 Vuex 的 store 中的状态的唯一方法是提交 mutation (变化)</h5><p><strong>每个 mutation 都有一个字符串的 事件类型 (type) 和 一个 回调函数 (handler)</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">/* ============</div><div class="line"> * Mutations for the auth module</div><div class="line"> * ============</div><div class="line"> *</div><div class="line"> * The mutations that are available on the</div><div class="line"> * account module.</div><div class="line"> */</div><div class="line"></div><div class="line">import Vue from &apos;vue&apos;;</div><div class="line">import &#123;</div><div class="line">  CHECK,</div><div class="line">  LOGIN,</div><div class="line">  LOGOUT,</div><div class="line">&#125; from &apos;./mutation-types&apos;;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  [CHECK](state) &#123;</div><div class="line">    state.authenticated = !!localStorage.getItem(&apos;id_token&apos;);</div><div class="line">    if (state.authenticated) &#123;</div><div class="line">      Vue.$http.defaults.headers.common.Authorization = `Bearer $&#123;localStorage.getItem(&apos;id_token&apos;)&#125;`;</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  [LOGIN](state, token) &#123;</div><div class="line">    state.authenticated = true;</div><div class="line">    localStorage.setItem(&apos;id_token&apos;, token);</div><div class="line">    Vue.$http.defaults.headers.common.Authorization = `Bearer $&#123;token&#125;`;</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  [LOGOUT](state) &#123;</div><div class="line">    state.authenticated = false;</div><div class="line">    localStorage.removeItem(&apos;id_token&apos;);</div><div class="line">    Vue.$http.defaults.headers.common.Authorization = &apos;&apos;;</div><div class="line">  &#125;,</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h5 id="3-mutation需要事件类型-那么我们就需要定义一个不可变的类型-这样可以避免类型冲突"><a href="#3-mutation需要事件类型-那么我们就需要定义一个不可变的类型-这样可以避免类型冲突" class="headerlink" title="3.mutation需要事件类型,那么我们就需要定义一个不可变的类型,这样可以避免类型冲突"></a>3.mutation需要事件类型,那么我们就需要定义一个不可变的类型,这样可以避免类型冲突</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">/* ============</div><div class="line"> * Mutation types for the account module</div><div class="line"> * ============</div><div class="line"> *</div><div class="line"> * The mutation types that are available</div><div class="line"> * on the auth module.</div><div class="line"> */</div><div class="line"></div><div class="line">export const CHECK = &apos;CHECK&apos;;</div><div class="line">export const LOGIN = &apos;LOGIN&apos;;</div><div class="line">export const LOGOUT = &apos;LOGOUT&apos;;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  CHECK,</div><div class="line">  LOGIN,</div><div class="line">  LOGOUT,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h5 id="4-那么前面的数据变更都完成了-如何获取数据的变更了-这时候我们就需要getters了"><a href="#4-那么前面的数据变更都完成了-如何获取数据的变更了-这时候我们就需要getters了" class="headerlink" title="4.那么前面的数据变更都完成了,如何获取数据的变更了,这时候我们就需要getters了"></a>4.那么前面的数据变更都完成了,如何获取数据的变更了,这时候我们就需要getters了</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/* ============</div><div class="line"> * Getters for the auth module</div><div class="line"> * ============</div><div class="line"> *</div><div class="line"> * The getters that are available on the</div><div class="line"> * auth module.</div><div class="line"> */</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  isLogin: state =&gt; state.authenticated,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h5 id="5-数据初始化的时候都为空-这时候我们要定义一些默认的状态-就需要state了"><a href="#5-数据初始化的时候都为空-这时候我们要定义一些默认的状态-就需要state了" class="headerlink" title="5.数据初始化的时候都为空,这时候我们要定义一些默认的状态,就需要state了"></a>5.数据初始化的时候都为空,这时候我们要定义一些默认的状态,就需要state了</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/* ============</div><div class="line"> * State of the auth module</div><div class="line"> * ============</div><div class="line"> *</div><div class="line"> * The initial state of the auth module.</div><div class="line"> */</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  authenticated: false,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h5 id="6-最后就是把当前模块导出了-在index里面实现"><a href="#6-最后就是把当前模块导出了-在index里面实现" class="headerlink" title="6.最后就是把当前模块导出了,在index里面实现"></a>6.最后就是把当前模块导出了,在index里面实现</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">/* ============</div><div class="line"> * Auth Module</div><div class="line"> * ============</div><div class="line"> */</div><div class="line"></div><div class="line">import actions from &apos;./actions&apos;;</div><div class="line">import getters from &apos;./getters&apos;;</div><div class="line">import mutations from &apos;./mutations&apos;;</div><div class="line">import state from &apos;./state&apos;;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  namespaced: true,</div><div class="line">  actions,</div><div class="line">  getters,</div><div class="line">  mutations,</div><div class="line">  state,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h5 id="7-在页面上如何绑定action还有获取getter呢？"><a href="#7-在页面上如何绑定action还有获取getter呢？" class="headerlink" title="7.在页面上如何绑定action还有获取getter呢？"></a>7.在页面上如何绑定action还有获取getter呢？</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">import &#123; mapActions, mapGetters &#125; from &apos;vuex&apos;;</div><div class="line">...</div><div class="line">computed: &#123;</div><div class="line">      ...mapActions(&#123;</div><div class="line">        authLogout: &apos;auth/logout&apos;, // 映射 this.authLogout() 为 this.$store.dispatch(&apos;auth/logout&apos;)</div><div class="line">      &#125;),</div><div class="line">      // 使用对象展开运算符将 getters 混入 computed 对象中</div><div class="line">      ...mapGetters(&#123;</div><div class="line">        // 映射 this.auth/isLogin 为 store.getters.auth/isLogin</div><div class="line">        isLogin: &apos;auth/isLogin&apos;,</div><div class="line">      &#125;),</div><div class="line">    &#125;,</div></pre></td></tr></table></figure>
+<p>我们通过<strong>mapGetters</strong>,<strong>mapActions</strong>辅助函数去实现</p>
+<h3 id="6-eslint在项目中的使用"><a href="#6-eslint在项目中的使用" class="headerlink" title="6.eslint在项目中的使用"></a>6.eslint在项目中的使用</h3><blockquote>
+<p>项目集成了eslint,做代码规范的检查<br>项目的eslint目前继承了<a href="https://github.com/airbnb/javascript" target="_blank" rel="external">airbnb</a>提供的规则验证</p>
+</blockquote>
+<p><strong>注:目前eslint集成在webpack环境中,项目启动的时候,如果有相关格式不符合规则,就会提示错误,这样的方案可能有些人不是很适应,那么可以通过注释下面的代码关闭eslint在webpack启动期间的运行</strong><br><strong>在webpack.base.conf.js中配置</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// eslint检查配置 不需要可以注释</div><div class="line">      &#123;</div><div class="line">        test: /\.(js|vue)$/,</div><div class="line">        loader: &apos;eslint-loader&apos;,</div><div class="line">        enforce: &apos;pre&apos;,</div><div class="line">        include: [resolve(&apos;src&apos;), resolve(&apos;test&apos;)],</div><div class="line">        options: &#123;</div><div class="line">          formatter: require(&apos;eslint-friendly-formatter&apos;)</div><div class="line">        &#125;</div><div class="line">      &#125;,</div></pre></td></tr></table></figure></p>
+<p><strong>不过个人建议还是在项目中集成eslint,好的代码习惯和风格,对于项目的阅读性,后期维护性还有扩展性都有很大的帮助</strong></p>
+<p><strong>eslint可以加入一些自己个人的规则配置,在.eslintrc.js文件下修改,如下:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">// http://eslint.org/docs/user-guide/configuring</div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">  root: true,</div><div class="line">  parser: &apos;babel-eslint&apos;,</div><div class="line">  parserOptions: &#123;</div><div class="line">    sourceType: &apos;module&apos;</div><div class="line">  &#125;,</div><div class="line">  env: &#123;</div><div class="line">    browser: true,</div><div class="line">  &#125;,</div><div class="line">  extends: &apos;airbnb-base&apos;,// 继承aribnb的配置</div><div class="line">  // required to lint *.vue files</div><div class="line">  plugins: [</div><div class="line">    &apos;html&apos;</div><div class="line">  ],</div><div class="line">  // check if imports actually resolve</div><div class="line">  &apos;settings&apos;: &#123;</div><div class="line">    &apos;import/resolver&apos;: &#123;</div><div class="line">      &apos;webpack&apos;: &#123;</div><div class="line">        &apos;config&apos;: &apos;build/webpack.base.conf.js&apos;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  // add your custom rules here 0表示关闭规则</div><div class="line">  &apos;rules&apos;: &#123;</div><div class="line">    &apos;global-require&apos;: 0,</div><div class="line">    &apos;import/first&apos;: 0,</div><div class="line">    &apos;no-console&apos;: 0,</div><div class="line">    &apos;no-param-reassign&apos;: 0,</div><div class="line">    &apos;no-multi-assign&apos;: 0,</div><div class="line"></div><div class="line">    // don&apos;t require .vue extension when importing</div><div class="line">    &apos;import/extensions&apos;: [&apos;error&apos;, &apos;always&apos;, &#123;</div><div class="line">      &apos;js&apos;: &apos;never&apos;,</div><div class="line">      &apos;vue&apos;: &apos;never&apos;</div><div class="line">    &#125;],</div><div class="line">    // allow optionalDependencies</div><div class="line">    &apos;import/no-extraneous-dependencies&apos;: [&apos;error&apos;, &#123;</div><div class="line">      &apos;optionalDependencies&apos;: [&apos;test/unit/index.js&apos;]</div><div class="line">    &#125;],</div><div class="line">    // allow debugger during development</div><div class="line">    &apos;no-debugger&apos;: process.env.NODE_ENV === &apos;production&apos; ? 2 : 0</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><a href="http://eslint.cn/docs/rules/" target="_blank" rel="external">更多eslint规则请参考</a></p>
+<p><strong>eslint一键格式化</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm run lint</div></pre></td></tr></table></figure></p>
+<p><strong>运行上面命令就会根据eslint设置的规则格式化,建议在关闭eslint的同学,在上传代码之前都运行一下这个命令,这样可以保证大家代码风格的统一性</strong></p>
+<p><a href="http://eslint.cn/" target="_blank" rel="external">eslint官网,更多eslint相关知识请查看</a> </p>
+<h3 id="7-命名规范"><a href="#7-命名规范" class="headerlink" title="7.命名规范"></a>7.命名规范</h3><blockquote>
+<p>组件样式命名: 统一采用 we(根据自己定制) 前缀 如: we-header<br>页面样式命名: 统一采用 page(根据自己定制) 前缀 如: page-login<br>文件命名: 统一采用-命名方式: 如: user-help<br>样式命名: 统一采用-命名方式: 如: .user-help<br>图片命名: 统一采用-命名方式: 如: .icon-help.png</p>
+</blockquote>
+<h3 id="8-总结"><a href="#8-总结" class="headerlink" title="8.总结"></a>8.总结</h3><blockquote>
+<p>一个项目在初期框架选型的时候,就需要把目录结构,对应的命令规则,模块划分好,团队成员保持一样的代码风格去实现功能,这样后期的扩展性,健壮性才会比较好<br>所以在项目初期阶段,一定需要花一些时间与团队人员一起思考总结,把这些东西考虑到位<br>目前项目没有集成组件库,你可以根据自己的需要去集成一个符合自己项目的组件库<br>上面都是我自己目前在新项目中的一些思考,你可以根据你自己的喜好还有想法去做一些改进,希望可以给你一些帮助,如果有更好的建议欢迎一起留言讨论,感谢!!!</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/16/js/mork-js/" rel="next" title="手把手教你创建你的第一个npm包">
+                <i class="fa fa-chevron-left"></i> 手把手教你创建你的第一个npm包
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ToNiQian" />
+          <p class="site-author-name" itemprop="name">ToNiQian</p>
+           
+              <p class="site-description motion-element" itemprop="description">toniqian的个人博客</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/toniqian" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-number">1.</span> <span class="nav-text">1.简介</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#项目用到的技术栈"><span class="nav-number">1.0.1.</span> <span class="nav-text">项目用到的技术栈:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-目录结构"><span class="nav-number">2.</span> <span class="nav-text">2.目录结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-配置文件"><span class="nav-number">3.</span> <span class="nav-text">3.配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1开发环境启动-dev-server-js"><span class="nav-number">3.1.</span> <span class="nav-text">3.1开发环境启动 dev-server.js</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2生产环境启动-build-js"><span class="nav-number">3.2.</span> <span class="nav-text">3.2生产环境启动 build.js</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-路由的实现"><span class="nav-number">4.</span> <span class="nav-text">4.路由的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mode为history表示使用h5-history模式-这样就不会出现-符号"><span class="nav-number">4.1.</span> <span class="nav-text">mode为history表示使用h5 history模式,这样就不会出现#符号</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Vuex状态管理"><span class="nav-number">5.</span> <span class="nav-text">5.Vuex状态管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#项目使用vuex进行状态管理-把一些公共行为-api交互相关的状态都封装在vuex中进行统一管理"><span class="nav-number">5.0.1.</span> <span class="nav-text">项目使用vuex进行状态管理,把一些公共行为,api交互相关的状态都封装在vuex中进行统一管理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#这边简单介绍一下自己对于vuex流程的理解"><span class="nav-number">5.1.</span> <span class="nav-text">这边简单介绍一下自己对于vuex流程的理解</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-首先就是我们在页面上必须通过action（行为）去改变数据状态-那么我们就需要定义action"><span class="nav-number">5.1.1.</span> <span class="nav-text">1.首先就是我们在页面上必须通过action（行为）去改变数据状态,那么我们就需要定义action</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-更改-Vuex-的-store-中的状态的唯一方法是提交-mutation-变化"><span class="nav-number">5.1.2.</span> <span class="nav-text">2.更改 Vuex 的 store 中的状态的唯一方法是提交 mutation (变化)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-mutation需要事件类型-那么我们就需要定义一个不可变的类型-这样可以避免类型冲突"><span class="nav-number">5.1.3.</span> <span class="nav-text">3.mutation需要事件类型,那么我们就需要定义一个不可变的类型,这样可以避免类型冲突</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-那么前面的数据变更都完成了-如何获取数据的变更了-这时候我们就需要getters了"><span class="nav-number">5.1.4.</span> <span class="nav-text">4.那么前面的数据变更都完成了,如何获取数据的变更了,这时候我们就需要getters了</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-数据初始化的时候都为空-这时候我们要定义一些默认的状态-就需要state了"><span class="nav-number">5.1.5.</span> <span class="nav-text">5.数据初始化的时候都为空,这时候我们要定义一些默认的状态,就需要state了</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-最后就是把当前模块导出了-在index里面实现"><span class="nav-number">5.1.6.</span> <span class="nav-text">6.最后就是把当前模块导出了,在index里面实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-在页面上如何绑定action还有获取getter呢？"><span class="nav-number">5.1.7.</span> <span class="nav-text">7.在页面上如何绑定action还有获取getter呢？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-eslint在项目中的使用"><span class="nav-number">6.</span> <span class="nav-text">6.eslint在项目中的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-命名规范"><span class="nav-number">7.</span> <span class="nav-text">7.命名规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-总结"><span class="nav-number">8.</span> <span class="nav-text">8.总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ToNiQian</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    Theme &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Pisces
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
